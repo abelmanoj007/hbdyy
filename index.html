@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Happy Birthday</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Poppins", sans-serif;
+      background: #ffeef6;
+      color: #333;
+      overflow-x: hidden;
+    }
+    .page-section {
+      display: none;
+      min-height: 100vh;
+      width: 100vw;
+      box-sizing: border-box;
+      position: absolute;
+      left: 0;
+      top: 0;
+      background: transparent;
+      transition: opacity 0.5s;
+      z-index: 1;
+    }
+    .page-section.active {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      opacity: 1;
+      z-index: 2;
+      animation: fadeIn 1s;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+    #header-section {
+      position: relative;
+      overflow: hidden;
+      background:
+        linear-gradient(rgba(255, 192, 203, 0.44), rgba(255, 182, 193, 0.5)),
+        url('image1.jpg') center/cover no-repeat;
+    }
+    .hero-bg-text {
+      position: absolute;
+      left: 0;
+      top: 50%;
+      width: 100%;
+      text-align: center;
+      font-size: 7vw;
+      font-weight: bold;
+      color: #fff;
+      opacity: 0.13;
+      transform: translateY(-50%);
+      pointer-events: none;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      z-index: 1;
+      user-select: none;
+    }
+    #header-section h1, #header-section h2 {
+      position: relative;
+      z-index: 2;
+    }
+    #header-section h1 {
+      font-size: 3.5rem;
+      margin: 0;
+      color: #fff;
+      text-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    }
+    #header-section h2 {
+      font-size: 1.5rem;
+      color: #fff;
+      margin: 10px 0 0;
+    }
+    .message-box {
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      font-size: 1.2rem;
+      line-height: 1.7;
+      margin-bottom: 20px;
+    }
+    .section-title {
+      color: #cf39a0;
+      font-size: 2rem;
+      margin-bottom: 18px;
+      text-align: center;
+      letter-spacing: 0.01em;
+    }
+    .gallery {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 22px;
+      justify-content: center;
+      margin: 20px 0;
+    }
+    .gallery img {
+      width: 180px;
+      height: 180px;
+      object-fit: cover;
+      border-radius: 12px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+      transition: transform 0.3s;
+      background: #eee;
+    }
+    .gallery img:hover {
+      transform: scale(1.05);
+    }
+    #hiddenLetter {
+      opacity: 0;
+      transition: 1.5s;
+      max-width: 800px;
+      margin: 24px auto 0;
+      font-size: 1.2rem;
+      line-height: 1.7;
+    }
+    #hiddenLetter.revealed {
+      opacity: 1;
+    }
+    .nav-btns {
+      display: flex;
+      justify-content: center;
+      margin-top: 2.2em;
+      gap: 18px;
+    }
+    .nav-btn {
+      background: #ff4f8b;
+      border: none;
+      color: #fff;
+      font-size: 1.15rem;
+      padding: 13px 32px;
+      border-radius: 11px;
+      cursor: pointer;
+      font-family: inherit;
+      font-weight: 600;
+      box-shadow: 0 3px 8px rgba(207, 57, 160, 0.08);
+      transition: background 0.2s, transform 0.2s;
+    }
+    .nav-btn:hover, .nav-btn:focus { background: #cf39a0; transform: translateY(-3px) scale(1.04);}
+    footer {
+      position: fixed;
+      width: 100vw;
+      left: 0;
+      bottom: 0;
+      text-align: center;
+      padding: 4px 0 2px 0;
+      font-size: 0.92rem;
+      color: #777;
+      background: rgba(255,255,255,0.80);
+      z-index: 1;
+      pointer-events: none;
+    }
+    .butterfly {
+      font-size: 30px;
+      position: fixed;
+      animation: fly 6s linear infinite;
+      pointer-events:none;
+    }
+    @keyframes fly {
+      from { transform: translateY(0) rotate(0deg); }
+      to { transform: translateY(-800px) rotate(720deg); }
+    }
+    #exciteScreen {
+      position:fixed; top:0; left:0; width:100%; height:100%;
+      background:#ff8fb3;
+      display:flex;
+      flex-direction:column;
+      justify-content:center; align-items:center; text-align:center;
+      z-index:99999;
+    }
+    #codeScreen {
+      display:none;
+      position:fixed; top:0; left:0; width:100%; height:100%;
+      background:#f3c3e1;
+      flex-direction:column;
+      justify-content:center; align-items:center; text-align:center;
+      z-index:99998;
+    }
+    #codeScreen input {
+      padding:13px 18px; border-radius:8px; border:1px solid #ccc; font-size:1.15rem; margin-bottom:10px;
+    }
+    #codeError {
+      margin-top:10px; color:#ff4883; font-size:1rem; display:none;
+    }
+    /* Cake slide */
+    #cake-area {
+      position: relative;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      user-select: none;
+    }
+    #cake-emoji {
+      font-size: 8rem;
+      line-height: 1;
+      z-index: 2;
+      transition: filter 0.4s;
+      user-select: none;
+      touch-action: none;
+    }
+    #cake-cut-line {
+      position:absolute;
+      top:0; left:0; width:100%; height:100%;
+      pointer-events:none;
+      z-index: 3;
+    }
+    #cut-msg {
+      margin-top:18px;font-size:1.5rem;color:#b63373;font-weight:bold;opacity:0;transition:opacity 1s;z-index:2;
+    }
+    @media (max-width: 600px) {
+      #header-section h1 { font-size: 2.1rem; }
+      .hero-bg-text { font-size: 10vw; }
+      #header-section h2 { font-size: 1.1rem;}
+      .gallery { gap: 10px;}
+      .gallery img { width: 90vw; height: 38vw; max-width: 300px; max-height: 130px;}
+      .section-title { font-size: 1.1rem;}
+      .nav-btn { width: 42vw; min-width: 100px; padding:11px 0; font-size: 0.98rem; }
+      .message-box, #hiddenLetter { font-size: 1rem; padding: 12px 6px;}
+      footer { font-size: 0.89rem; padding: 2px 0 2px 0; }
+      #cake-emoji { font-size: 5.6rem; }
+    }
+  </style>
+</head>
+<body>
+  <!-- Excited Login Page -->
+  <div id="exciteScreen">
+    <h1 style="color:white; font-size:2.2rem; margin-bottom:20px;">Are you excited to see the surprise, Dude? 🎁</h1>
+    <button id="enterSiteBtn" class="nav-btn">Yes! Show me 💖</button>
+  </div>
+  <!-- Secret Code Page -->
+  <div id="codeScreen">
+    <h2 style="font-size:1.5rem; color:#b04c92;">🔒 Enter the Secret Code</h2>
+    <p style="margin:18px 0 16px 0; color:#7f2176;">Hint: what I often call you and your birth date</p>
+    <input id="codeInput" type="text" placeholder="Secret Code" autocomplete="off">
+    <div>
+      <button id="submitCodeBtn" class="nav-btn">Unlock</button>
+    </div>
+    <div id="codeError">Wrong code, try again!</div>
+  </div>
+
+  <!-- PAGE SECTIONS -->
+  <div id="header-section" class="page-section active">
+    <span class="hero-bg-text">Happy Birthday Dudee</span>
+    <h1 id="typedTitle">Happy Birthday, Dudeeee! 🎉</h1>
+    <h2>Dec 25 • Made with ❤️</h2>
+    <div class="nav-btns">
+      <button class="nav-btn" id="next1">Next</button>
+    </div>
+  </div>
+
+  <div id="message-section" class="page-section">
+    <div class="section-title">🌸 A Little Message For You</div>
+    <div class="message-box">
+      <p>
+        Dear Chakkare,<br><br>
+        You are one of the most special people in my life. Every moment we talk,
+        every late-night chat, every laugh we share — it all means more than you
+        can imagine.<br><br>
+        I made this small website just for you, to make your day a little more
+        special. I hope this brings a smile to your face today.
+        <br><br>
+        Wishing you all the happiness, love, and warmth in the world.
+        <br><br>
+        — Your own Dude
+      </p>
+    </div>
+    <div class="nav-btns">
+      <button class="nav-btn" id="prev2">Back</button>
+      <button class="nav-btn" id="next2">Next</button>
+    </div>
+  </div>
+
+  <div id="gallery-section" class="page-section">
+    <div class="section-title">📸 Some Beautiful Memories</div>
+    <div class="gallery">
+      <img src="image2.jpg" alt="Memory 1" />
+      <img src="image3.jpg" alt="Memory 2" />
+    </div>
+    <div class="nav-btns">
+      <button class="nav-btn" id="prev3">Back</button>
+      <button class="nav-btn" id="next3">Next</button>
+    </div>
+  </div>
+
+  <div id="letter-section" class="page-section">
+    <div class="section-title">💌 A Special Letter Just for You</div>
+    <button id="revealLetterBtn" class="nav-btn">Reveal Letter</button>
+    <p id="hiddenLetter">
+      My dearest Chakkare,<br><br>
+      Every moment I talk to you, I feel a little more alive. You bring warmth, comfort, smiles, and a kind of peace I can't explain.<br><br>
+      Thank you for being you. Thank you for being my Dude. ❤️
+    </p>
+    <div class="nav-btns">
+      <button class="nav-btn" id="prev4">Back</button>
+      <button class="nav-btn" id="next4">Next</button>
+    </div>
+  </div>
+
+  <!-- 🎂 Cake Cutting Page -->
+  <div id="cake-section" class="page-section">
+    <div class="section-title">🎂 Time to Cut the Cake!</div>
+    <div id="cake-area">
+      <span id="cake-emoji" role="img" aria-label="cake">🎂</span>
+      <canvas id="cake-cut-line" width="210" height="180"></canvas>
+      <div id="cut-msg">🎉 Happy Birthday! 🎉</div>
+    </div>
+    <div style="margin:20px 0 0 0;max-width:330px;color:#975;">
+      <span style="font-size:1.1rem;">Swipe across (left ↔ right) on the cake to cut it!</span>
+    </div>
+    <div class="nav-btns" style="margin-top:30px;">
+      <button class="nav-btn" id="prev5">Back</button>
+    </div>
+  </div>
+  <footer>
+    Made with ❤️ by Your own Dude 
+  </footer>
+
+  <!-- Background song: Until I Found You (low volume) -->
+  <audio id="bgm" 
+    src="song.mp3"
+    loop></audio>
+
+  <script>
+    // Play song at low volume, on first user click (browser rule)
+    const bgm = document.getElementById('bgm');
+    bgm.volume = 0.12;
+    function enableMusic(){ bgm.play().catch(()=>{}); }
+    document.addEventListener('click', enableMusic);
+
+    // Floating hearts
+    document.addEventListener('click', e => {
+      const heart = document.createElement('div');
+      heart.innerHTML = '💗';
+      heart.style.position = 'fixed';
+      heart.style.left = e.clientX + 'px';
+      heart.style.top = e.clientY + 'px';
+      heart.style.opacity = '1';
+      heart.style.transition = '1.2s';
+      document.body.appendChild(heart);
+      setTimeout(()=>{heart.style.opacity='0'; heart.style.top=(e.clientY-80)+'px';},50);
+      setTimeout(()=>heart.remove(),1200);
+    });
+
+    // Typing effect
+    const titleText = "Happy Birthday, Dudeeee! 🎉";
+    let ti = 0;
+    const typedTitle = document.getElementById('typedTitle');
+    typedTitle.textContent = '';
+    function typeEffect(){
+      if(ti < titleText.length){ typedTitle.textContent += titleText.charAt(ti); ti++; setTimeout(typeEffect,80);} }
+    typeEffect();
+
+    // PAGE NAVIGATION
+    const sections = [
+      document.getElementById('header-section'),
+      document.getElementById('message-section'),
+      document.getElementById('gallery-section'),
+      document.getElementById('letter-section'),
+      document.getElementById('cake-section'),
+    ];
+    function showSection(idx) {
+      sections.forEach((s, i) => s.classList.toggle('active', i === idx));
+      if (idx === 4) resetCakeSlide();
+    }
+    // Nav
+    document.getElementById('next1').onclick = ()=>showSection(1);
+    document.getElementById('next2').onclick = ()=>showSection(2);
+    document.getElementById('next3').onclick = ()=>showSection(3);
+    document.getElementById('next4').onclick = ()=>showSection(4);
+    document.getElementById('prev2').onclick = ()=>showSection(0);
+    document.getElementById('prev3').onclick = ()=>showSection(1);
+    document.getElementById('prev4').onclick = ()=>showSection(2);
+    document.getElementById('prev5').onclick = ()=>showSection(3);
+
+    // Letter reveal logic
+    document.getElementById('revealLetterBtn').onclick = function() {
+      document.getElementById('hiddenLetter').classList.add('revealed');
+      this.style.display = 'none';
+    };
+
+    // Excite Screen Logic - Now goes to secret code page!
+    const exciteScreen = document.getElementById('exciteScreen');
+    const codeScreen = document.getElementById('codeScreen');
+    const enterSiteBtn = document.getElementById('enterSiteBtn');
+    if(enterSiteBtn){
+      enterSiteBtn.addEventListener('click', ()=>{
+        exciteScreen.style.display = 'none';
+        codeScreen.style.display = 'flex';
+      });
+    }
+    // Secret code page handling
+    document.getElementById('submitCodeBtn').addEventListener('click', tryCode);
+    document.getElementById('codeInput').addEventListener('keyup', function(e){
+      if(e.key === "Enter") tryCode();
+    });
+    function tryCode() {
+      const inputVal = document.getElementById('codeInput').value.trim();
+      if (inputVal === "Dude25") {
+        codeScreen.style.display = 'none';
+        ti = 0; typedTitle.textContent = ''; typeEffect();
+        showSection(0);
+      } else {
+        document.getElementById('codeError').style.display = 'block';
+      }
+    }
+
+    // Confetti
+    function confetti(){
+      for(let i=0;i<120;i++){
+        const s=document.createElement('span');
+        s.classList.add('confetti');
+        s.style.position='fixed';
+        s.style.left=Math.random()*100+'vw';
+        s.style.top='-20px';
+        s.style.fontSize='14px';
+        s.style.color=`hsl(${Math.random()*360},70%,60%)`;
+        s.textContent='•';
+        s.style.animation=`fall ${2+Math.random()*3}s linear`;
+        document.body.appendChild(s);
+        setTimeout(()=>s.remove(),5000);
+      }
+    }
+    confetti();
+
+    // Falling confetti animation
+    const style = document.createElement('style');
+    style.textContent = `@keyframes fall { to { transform: translateY(120vh); opacity: 0; } }`;
+    document.head.appendChild(style);
+
+    // Butterflies
+    setInterval(()=>{
+      const b=document.createElement('div');
+      b.classList.add('butterfly');
+      b.textContent='💕';
+      b.style.left=Math.random()*100+'vw';
+      b.style.bottom='-50px';
+      b.style.animationDuration=(4+Math.random()*4)+'s';
+      document.body.appendChild(b);
+      setTimeout(()=>b.remove(),7000);
+    },800);
+
+    // === Cake Cutting Slide (Emoji) ===
+    const cakeEmoji = document.getElementById('cake-emoji');
+    const cakeLine = document.getElementById('cake-cut-line');
+    const cutMsg = document.getElementById('cut-msg');
+    let drag = false, dragging = false, dragStart = null, dragEnd = null, cakeCut = false;
+    function drawCakeLine(x, y) {
+      const ctx = cakeLine.getContext('2d');
+      ctx.clearRect(0,0,cakeLine.width,cakeLine.height);
+      ctx.strokeStyle="#ff3578"; ctx.lineWidth=4;
+      ctx.beginPath();
+      ctx.moveTo(10, y);
+      ctx.lineTo(cakeLine.width-10, y);
+      ctx.stroke();
+    }
+    cakeLine.width = 210;
+    cakeLine.height = 180;
+
+    // Mouse
+    cakeEmoji.addEventListener('mousedown', function(e){
+      if(cakeCut) return;
+      drag = true; dragging = false;
+      dragStart = e.offsetY;
+    });
+    cakeEmoji.addEventListener('mousemove', function(e){
+      if(!drag || cakeCut) return;
+      dragging = true;
+      drawCakeLine(0, e.offsetY);
+      dragEnd = e.offsetY;
+    });
+    cakeEmoji.addEventListener('mouseup', function(e){
+      if(!drag || cakeCut) return;
+      drag = false;
+      if(dragging && Math.abs((dragStart||0)-(dragEnd||0)) < 35) {
+        drawCakeLine(0, dragEnd);
+        finishCakeCut();
+      } else {
+        clearCakeLine();
+      }
+    });
+    // Touch
+    cakeEmoji.addEventListener('touchstart', function(e){
+      if(cakeCut) return;
+      drag = true; dragging = false;
+      dragStart = e.touches[0].clientY - cakeEmoji.getBoundingClientRect().top;
+    },{passive:true});
+    cakeEmoji.addEventListener('touchmove', function(e){
+      if(!drag || cakeCut) return;
+      dragging = true;
+      let touchY = e.touches[0].clientY - cakeEmoji.getBoundingClientRect().top;
+      drawCakeLine(0, touchY);
+      dragEnd = touchY;
+    },{passive:true});
+    cakeEmoji.addEventListener('touchend', function(e){
+      if(!drag || cakeCut) return;
+      drag = false;
+      if(dragging && Math.abs((dragStart||0)-(dragEnd||0)) < 40) {
+        drawCakeLine(0, dragEnd);
+        finishCakeCut();
+      } else {
+        clearCakeLine();
+      }
+    });
+    function finishCakeCut() {
+      cakeCut = true;
+      cutMsg.style.opacity = 1;
+      cakeEmoji.style.filter="brightness(1.12) drop-shadow(0 0 16px #ffd7ef)";
+    }
+    function clearCakeLine() {
+      const ctx = cakeLine.getContext('2d');
+      ctx.clearRect(0,0,cakeLine.width,cakeLine.height);
+    }
+    function resetCakeSlide() {
+      cakeCut = false;
+      clearCakeLine();
+      cutMsg.style.opacity = 0;
+      cakeEmoji.style.filter = 'none';
+    }
+  </script>
+</body>
+</html>
